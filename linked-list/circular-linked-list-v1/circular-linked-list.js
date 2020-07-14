@@ -1,6 +1,6 @@
 const LinkedList = require('../linked-list-v1/linked-list')
 const Node = require('../../models/linked-list-node')
-const defaultEquals = require('../../util')
+const { defaultEquals } = require('../../util')
 
 class CircularLinkedList extends LinkedList {
   constructor(equalsFn = defaultEquals) {

@@ -1,4 +1,4 @@
-const defaultEquals = require('../../util')
+const { defaultEquals } = require('../../util')
 const Node = require('../../models/linked-list-node')
 
 class LinkedList {
@@ -51,7 +51,7 @@ class LinkedList {
   }
 
   insert(element, index) {
-    if (index >= 0 && index < this.numberOfElements) {
+    if (index >= 0 && index <= this.numberOfElements) {
       const node = new Node(element)
       if (index === 0) {
         node.next = this.head
