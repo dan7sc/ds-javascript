@@ -19,6 +19,24 @@ class HashTableLinearProbing {
     return hash % 37
   }
 
+  djb2HashCode(key) {
+    const tableKey = this.toStrFn(key)
+    let hash = 5381
+    for (let i = 0; i < tableKey.length; i++) {
+      hash = (hash * 33) + tableKey.charCodeAt(i)
+    }
+    return hash % 37
+  }
+
+  sdbmHashCode(key) {
+    const tableKey = this.toStrFn(key)
+    let hash =0
+    for (let i = 0; i < tableKey.length; i++) {
+      hash = (hash * 65599) + tableKey.charCodeAt(i)
+    }
+    return hash % 37
+  }
+
   hashCode(key) {
     return this.loseloseHashCode(key)
   }
@@ -104,6 +122,19 @@ class HashTableLinearProbing {
     let objString = `{${keys[0]} => ${this.table[keys[0]].toString()}}`
     for (let i = 1; i < keys.length; i++) {
       objString = `${objString}\n{${keys[i]} => ${this.table[keys[i]].toString()}}`
+    }
+    return objString
+  }
+
+  toStringWithHashCode() {
+    if (this.isEmpty()) {
+      return ''
+    }
+    const keys = Object.keys(this.table)
+    console.log(this.table[keys[0]].key)
+    let objString = `(${this.hashCode(this.table[keys[0]].key)}) {${keys[0]} => ${this.table[keys[0]].toString()}}`
+    for (let i = 1; i < keys.length; i++) {
+      objString = `${objString}\n(${this.hashCode(this.table[keys[i]].key)}) {${keys[i]} => ${this.table[keys[i]].toString()}}`
     }
     return objString
   }
