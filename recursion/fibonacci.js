@@ -11,16 +11,7 @@ const fibonacci = n => {
     return 1
   }
 
-  let fibPrevMinus2 = 0
-  let fibPrevMinus1 = 1
-  let fib
-  for(let i = 2; i <= n; i++) {
-    fib = fibPrevMinus2 + fibPrevMinus1
-    fibPrevMinus2 = fibPrevMinus1
-    fibPrevMinus1 = fib
-  }
-
-  return fib
+  return fibonacci(n - 1) + fibonacci(n - 2)
 }
 
 let result = ''
