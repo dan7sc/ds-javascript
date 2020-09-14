@@ -4,42 +4,34 @@ const printNode = value => {
   console.log(value)
 }
 
-let strTree = ''
-const printTree = (value) => {
-  if(value) {
-    strTree += `${value} `
-  }
-}
-
-// const getTree = () => {
-//   let strTree = ''
-
-//   return (value) => {
-//     if(value) {
-//       strTree += `${value} `
-//     }
-//     console.log(strTree)
+// let strTree = ''
+// const printTree = (value) => {
+//   if(value) {
+//     strTree += `${value} `
 //   }
 // }
 
+const treeInString = () => {
+  let tree = ''
 
-const printX = (tree, value) => {
-  if(value) {
-    strTree += `${value} `
-  }
-}
-
-const getTree = () => {
-  let strTree = ''
-
-  return (value) => {
+  const addValue = (value) => {
     if(value) {
-      strTree += `${value} `
+      tree += `${value} `
     }
-    console.log(strTree)
+  }
+
+  return {
+    addKey: (value) => {
+      addValue(value)
+    },
+    getTree: () => {
+      return tree
+    },
+    clean: () => {
+      tree = ''
+    }
   }
 }
-
 
 const tree = new BinarySearchTree()
 
@@ -75,15 +67,31 @@ console.log(tree.min().key)
 console.log(tree.max().key)
 
 console.log(tree.search(25))
-console.log(tree.search(35))
+
+tree.remove(6)
+console.log(tree.search(6))
+tree.insert(6)
 
 // tree.inOrderTraverse(printTree)
 // tree.preOrderTraverse(printTree)
 // tree.posOrderTraverse(printTree)
-tree.levelOrderTraverse(printTree)
-console.log(strTree)
+// tree.levelOrderTraverse(printTree)
+// console.log(strTree)
 
 
-// const printTreeInLine = getTree
-// tree.inOrderTraverse(getTree)
-// console.log(printTreeInLine)
+const strTree = treeInString()
+
+tree.inOrderTraverse(strTree.addKey)
+console.log(strTree.getTree())
+
+strTree.clean()
+tree.preOrderTraverse(strTree.addKey)
+console.log(strTree.getTree())
+
+strTree.clean()
+tree.posOrderTraverse(strTree.addKey)
+console.log(strTree.getTree())
+
+strTree.clean()
+tree.levelOrderTraverse(strTree.addKey)
+console.log(strTree.getTree())
