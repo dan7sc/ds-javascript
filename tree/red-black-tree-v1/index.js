@@ -56,56 +56,30 @@ const tree = new RedBlackTree()
 //                  10#     18#  25#
 // red node: #
 
-tree.insert(11)
-tree.insert(7)
-tree.insert(15)
-tree.insert(5)
-tree.insert(3)
-tree.insert(9)
-tree.insert(8)
-tree.insert(10)
-tree.insert(13)
-tree.insert(12)
-tree.insert(14)
-tree.insert(20)
-tree.insert(18)
-tree.insert(25)
-tree.insert(6)
-
+const numbers = [
+  11, 7, 15, 5, 3, 9, 8, 10, 13, 12, 14, 20, 18, 25, 6
+]
+numbers.forEach(number => {
+  tree.insert(number)
+})
 
 // console.log(tree.root)
 // tree.inOrderTraverse(printNode)
 
-// console.log(tree.min().key)
-// console.log(tree.max().key)
+console.log(tree.min().key)
+console.log(tree.max().key)
 
-// console.log(tree.search(25))
+console.log(tree.search(25))
+console.log(tree.search(125))
 
-// tree.remove(6)
-// console.log(tree.search(6))
-// tree.insert(6)
+tree.remove(6)
+tree.remove(7)
+tree.remove(8)
+tree.remove(13)
+tree.remove(15)
+tree.remove(14)
 
-// tree.remove(12)
-// tree.remove(14)
-// tree.remove(13)
-
-// tree.remove(20)
-// tree.remove(18)
-// tree.remove(25)
-
-// tree.remove(12)
-// tree.remove(14)
-// tree.remove(13)
-
-// tree.remove(8)
-// tree.remove(6)
-// tree.remove(3)
-// tree.inOrderTraverse(printTree)
-// tree.preOrderTraverse(printTree)
-// tree.posOrderTraverse(printTree)
-// tree.levelOrderTraverse(printTree)
-// console.log(strTree)
-
+tree.insert(6)
 
 const strTree = treeInString()
 

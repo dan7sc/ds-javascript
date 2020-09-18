@@ -16,7 +16,7 @@ class RedBlackTree extends BinarySearchTree {
       this.root.color = Colors.BLACK
     } else {
       const newNode = this.insertNode(this.root, key)
-      this.fixTreeProperties(newNode)
+      this.fixTreePropertiesAfterInserting(newNode)
       return newNode
     }
   }
@@ -50,6 +50,19 @@ class RedBlackTree extends BinarySearchTree {
     }
   }
 
+  replaceNode(oldNode, newNode) {
+    newNode.parent = oldNode.parent
+    if(!oldNode.parent) {
+      this.root = newNode
+    } else {
+      if(oldNode === oldNode.parent.left) {
+        oldNode.parent.left = newNode
+      } else {
+        oldNode.parent.right = newNode
+      }
+    }
+  }
+
   rotateLL(node) {
     const tmp = node.right
     node.right = tmp.left
@@ -57,16 +70,7 @@ class RedBlackTree extends BinarySearchTree {
     if(tmp.left && tmp.left.key) {
       tmp.left.parent = node
     }
-    tmp.parent = node.parent
-    if(!node.parent) {
-      this.root = tmp
-    } else {
-      if(node === node.parent.left) {
-        node.parent.left = tmp
-      } else {
-        node.parent.right = tmp
-      }
-    }
+    this.replaceNode(node, tmp)
 
     tmp.left = node
     node.parent = tmp
@@ -79,22 +83,13 @@ class RedBlackTree extends BinarySearchTree {
     if(tmp.right && tmp.right.key) {
       tmp.right.parent = node
     }
-    tmp.parent = node.parent
-    if(!node.parent) {
-      this.root = tmp
-    } else {
-      if(node === node.parent.left) {
-        node.parent.left = tmp
-      } else {
-        node.parent.right = tmp
-      }
-    }
+    this.replaceNode(node, tmp)
 
     tmp.right = node
     node.parent = tmp
   }
 
-  fixTreeProperties(node) {
+  fixTreePropertiesAfterInserting(node) {
     while(node && node.parent &&
           node.parent.isRed() &&
           node.isRed()) {
@@ -136,35 +131,169 @@ class RedBlackTree extends BinarySearchTree {
     this.root.color = Colors.BLACK
   }
 
-  removeNode(node, key) {
+  get(key) {
+    return this.getNode(this.root, key)
+  }
+
+  getNode(node, key) {
     if(!node) {
       return null
     }
     if(this.compareFn(key, node.key) === Compare.LESS_THAN) {
-      node.left = this.removeNode(node.left, key)
-      return node
+      node = this.getNode(node.left, key)
     } else if(this.compareFn(key, node.key) === Compare.BIGGER_THAN) {
-      node.right = this.removeNode(node.right, key)
-      return node
+      node = this.getNode(node.right, key)
+    }
+    return node
+  }
+
+  getSibling(node) {
+    if(node.parent) {
+      return null
+    }
+    if(node.parent.left === node) {
+      return node.parent.right
     } else {
-      if(!node.left && !node.right) {
-        node = null
-        return node
-      }
-      if(!node.left) {
-        node = node.right
-        return node
-      } else if(!node.right) {
-        node = node.left
-        return node
-      }
-      const aux = this.minNode(node.right)
-      node.key = aux.key
-      node.right = this.removeNode(node.right, aux.key)
-      return node
+      return node.parent.left
     }
   }
 
+  getSucessor(node) {
+    if(node.left && node.right) {
+      return this.minNode(node.right)
+    } else if(node.left && !node.right) {
+      return node.left
+    } else if(node.right && !node.left) {
+      return node.right
+    } else {
+      return null
+    }
+  }
+
+  remove(key) {
+    if (!this.root) {
+      return null
+    }
+    const node = this.get(key)
+    const removedNode = this.removeNode(node)
+    return removedNode ? removedNode.key : undefined
+  }
+
+  removeNode(node) {
+    if(!node) {
+      return null
+    }
+
+    let sucessor = this.getSucessor(node)
+    const sibling = this.getSibling(node)
+
+    const isDoubleBlack = (
+      (!node || !node.isRed()) && (!sucessor || !sucessor.isRed())
+    )
+
+    if(!sucessor) {
+      if(node === this.root) {
+        this.root = null
+      } else {
+        if(isDoubleBlack) {
+          this.fixTreePropertiesAfterDeleting(node)
+        } else {
+          if(sibling) {
+            sibling.color = Colors.RED
+          }
+        }
+        if(node.parent.left === node) {
+          node.parent.left = null
+        } else {
+          node.parent.right = null
+        }
+      }
+      return node
+    }
+
+    if(!node.left || !node.right) {
+      if(node === this.root) {
+        node.key = sucessor.key
+        node.left = null
+        node.right = null
+      } else {
+        if(node.parent.left === node) {
+          node.parent.left = sucessor
+        } else {
+          node.parent.right = sucessor
+        }
+        sucessor.parent = node.parent
+        if(isDoubleBlack) {
+          this.fixTreePropertiesAfterDeleting(sucessor)
+        } else {
+          sucessor.color = Colors.BLACK
+        }
+      }
+      return node
+    }
+    const tmp = sucessor.key
+    sucessor.key = node.key
+    node.key = tmp
+    return this.removeNode(sucessor)
+  }
+
+  fixTreePropertiesAfterDeleting(node) {
+    let sibling = null
+    while(node !== this.root && !node.isRed()) {
+      if(node === node.parent.left) {
+        sibling = node.parent.right
+        if(sibling.isRed()) {
+          sibling.color = Colors.BLACK
+          node.parent.color = Colors.RED
+          this.rotateLL(node.parent)
+          sibling = node.parent.right
+        }
+        if((!sibling.left || !sibling.left.isRed()) &&
+           (!sibling.right || !sibling.right.isRed())) {
+          sibling.color = Colors.RED
+          node = node.parent
+        } else {
+          if(sibling.left && !sibling.isRed()) {
+            sibling.left.color = Colors.BLACK
+            sibling.color = Colors.RED
+            this.rotateRR(sibling)
+            sibling = node.parent.right
+          }
+          sibling.color = node.parent.color
+          node.parent.color = Colors.BLACK
+          sibling.right.color = Colors.BLACK
+          this.rotateLL(node.parent)
+          node = this.root
+        }
+      } else {
+        sibling = node.parent.left
+        if(sibling.isRed()) {
+          sibling.color = Colors.BLACK
+          node.parent.color = Colors.RED
+          this.rotateRR(node.parent)
+          sibling = node.parent.left
+        }
+        if((!sibling.left || !sibling.left.isRed()) &&
+           (!sibling.right || !sibling.right.isRed())) {
+          sibling.color = Colors.RED
+          node = node.parent
+        } else {
+          if(sibling.right && !sibling.isRed()) {
+            sibling.right.color = Colors.BLACK
+            sibling.color = Colors.RED
+            this.rotateLL(sibling)
+            sibling = node.parent.left
+          }
+          sibling.color = node.parent.color
+          node.parent.color = Colors.BLACK
+          sibling.left.color = Colors.BLACK
+          this.rotateRR(node.parent)
+          node = this.root
+        }
+      }
+    }
+    node.color = Colors.BLACK
+  }
 
   levelOrderTraverse(callback) {
     const queue = new Queue()
