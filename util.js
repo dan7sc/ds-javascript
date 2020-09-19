@@ -25,9 +25,14 @@ const defaultToString = (item) => {
   return item.toString()
 }
 
+const swap = (array, a, b) => {
+  [array[a], array[b]] = [array[b], array[a]]
+}
+
 module.exports = {
   defaultEquals,
   Compare,
   defaultCompare,
-  defaultToString
+  defaultToString,
+  swap
 }
