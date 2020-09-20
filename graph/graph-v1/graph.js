@@ -1,4 +1,19 @@
 const Dictionary = require('../../dictionary/dictionary-v1/dictionary')
+const Queue = require('../../queue/queue-v1/queue')
+
+const Colors = {
+  WHITE: 0,
+  GREY: 1,
+  BLACK: 2
+}
+
+const initializeColor = vertices => {
+  const color = {}
+  for(let i = 0; i < vertices.length; i++) {
+    color[vertices[i]] = Colors.WHITE
+  }
+  return color
+}
 
 class Graph {
   constructor(isDirected = false) {
@@ -46,6 +61,31 @@ class Graph {
       str += '\n'
     }
     return str
+  }
+
+  breadthFirstSearch(startVertex, callback) {
+    const vertices = this.getVertices()
+    const adjacentList = this.getAdjacentList()
+    const color = initializeColor(vertices)
+    const queue = new Queue()
+
+    queue.enqueue(startVertex)
+    while(!queue.isEmpty()) {
+      const currentVertice = queue.dequeue()
+      const neighbors = adjacentList.get(currentVertice)
+      color[currentVertice] = Colors.GREY
+      for(let i = 0; i < neighbors.length; i++) {
+        const currentNeighbor = neighbors[i]
+        if(color[currentNeighbor] === Colors.WHITE) {
+          color[currentNeighbor] = Colors.GREY
+          queue.enqueue(currentNeighbor)
+        }
+      }
+      color[currentVertice] = Colors.BLACK
+      if(callback) {
+        callback(currentVertice)
+      }
+    }
   }
 }
 

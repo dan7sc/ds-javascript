@@ -1,5 +1,7 @@
 const Graph = require('./graph')
 
+const printVertex = (value) => console.log('Visited vertex:', value)
+
 const graph = new Graph()
 
 const localVertices = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
@@ -23,3 +25,5 @@ graph.addEdge('E', 'I')
 // console.log(graph.adjacentList.table)
 
 console.log(graph.toString())
+
+graph.breadthFirstSearch(localVertices[0], printVertex)
