@@ -13,7 +13,7 @@ for(let i = 0; i < localVertices.length; i++) {
 //          A ---
 //        /  \   \
 //       /    \   \
-//      B      C   D
+//      B      C - D
 //    /   \     \ / \
 //   E     F     G   H
 //   |
@@ -37,7 +37,9 @@ graph.addEdge('E', 'I')
 
 // graph.breadthFirstSearch(localVertices[0], printVertex)
 
-const shortestPathA = graph.breadthFirstSearch(localVertices[0])
-console.log(shortestPathA)
+// const shortestPathA = graph.breadthFirstSearch(localVertices[0])
+// console.log(shortestPathA)
 
-graph.showPathsfromVertex(localVertices, 0)
+// graph.showPathsfromVertex(localVertices, 0)
+
+graph.depthFirstSearch(printVertex)

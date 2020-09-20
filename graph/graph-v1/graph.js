@@ -124,6 +124,36 @@ class Graph {
       console.log(paths)
     }
   }
+
+  depthFirstSearch(callback = null)  {
+    const vertices = this.getVertices()
+    const adjacentList = this.getAdjacentList()
+    const color = initializeColor(vertices)
+
+    for(let i = 0; i < vertices.length; i++) {
+      const currentVertice = vertices[i]
+      if(color[currentVertice] === Colors.WHITE) {
+        this.depthFirstSearchHelper(
+          currentVertice, color, adjacentList, callback
+        )
+      }
+    }
+  }
+
+  depthFirstSearchHelper(vertice, color, adjacentList, callback) {
+    color[vertice] = Colors.GREY
+    if(callback) {
+      callback(vertice)
+    }
+    const neighbors = adjacentList.get(vertice)
+    for(let i = 0; i < neighbors.length; i++) {
+      const neighbor = neighbors[i]
+      if(color[neighbor] === Colors.WHITE) {
+        this.depthFirstSearchHelper(neighbor, color, adjacentList, callback)
+      }
+    }
+    color[vertice] = Colors.BLACK
+  }
 }
 
 module.exports = Graph
