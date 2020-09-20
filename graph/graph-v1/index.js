@@ -10,6 +10,15 @@ for(let i = 0; i < localVertices.length; i++) {
   graph.addVertex(localVertices[i])
 }
 
+//          A ---
+//        /  \   \
+//       /    \   \
+//      B      C   D
+//    /   \     \ / \
+//   E     F     G   H
+//   |
+//   I
+
 graph.addEdge('A', 'B')
 graph.addEdge('A', 'C')
 graph.addEdge('A', 'D')
@@ -24,6 +33,11 @@ graph.addEdge('E', 'I')
 // console.log(graph.vertices)
 // console.log(graph.adjacentList.table)
 
-console.log(graph.toString())
+// console.log(graph.toString())
 
-graph.breadthFirstSearch(localVertices[0], printVertex)
+// graph.breadthFirstSearch(localVertices[0], printVertex)
+
+const shortestPathA = graph.breadthFirstSearch(localVertices[0])
+console.log(shortestPathA)
+
+graph.showPathsfromVertex(localVertices, 0)

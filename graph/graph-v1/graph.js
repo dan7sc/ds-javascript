@@ -1,5 +1,6 @@
 const Dictionary = require('../../dictionary/dictionary-v1/dictionary')
 const Queue = require('../../queue/queue-v1/queue')
+const Stack = require('../../stack/stack-v2/stack')
 
 const Colors = {
   WHITE: 0,
@@ -63,13 +64,21 @@ class Graph {
     return str
   }
 
-  breadthFirstSearch(startVertex, callback) {
+  breadthFirstSearch(startVertex, callback = null) {
     const vertices = this.getVertices()
     const adjacentList = this.getAdjacentList()
     const color = initializeColor(vertices)
     const queue = new Queue()
+    const distances = {}
+    const predecessors = {}
 
     queue.enqueue(startVertex)
+
+    for(let i = 0; i < vertices.length; i++) {
+      distances[vertices[i]] = 0
+      predecessors[vertices[i]] = null
+    }
+
     while(!queue.isEmpty()) {
       const currentVertice = queue.dequeue()
       const neighbors = adjacentList.get(currentVertice)
@@ -78,6 +87,8 @@ class Graph {
         const currentNeighbor = neighbors[i]
         if(color[currentNeighbor] === Colors.WHITE) {
           color[currentNeighbor] = Colors.GREY
+          distances[currentNeighbor] = distances[currentVertice] + 1
+          predecessors[currentNeighbor] = currentVertice
           queue.enqueue(currentNeighbor)
         }
       }
@@ -85,6 +96,32 @@ class Graph {
       if(callback) {
         callback(currentVertice)
       }
+    }
+    return {
+      distances,
+      predecessors
+    }
+  }
+
+  showPathsfromVertex(vertices, startVertex) {
+    const fromVertex = vertices[startVertex]
+    const shortestPath = this.breadthFirstSearch(fromVertex)
+
+    for(let i = startVertex + 1; i < vertices.length; i++) {
+      const toVertex = vertices[i]
+      const stack = new Stack()
+
+      let currentVertex = toVertex
+      while(currentVertex !== fromVertex) {
+        stack.push(currentVertex)
+        currentVertex = shortestPath.predecessors[currentVertex]
+      }
+      stack.push(fromVertex)
+      let paths = stack.pop()
+      while(!stack.isEmpty()) {
+        paths += ` - ${stack.pop()}`
+      }
+      console.log(paths)
     }
   }
 }
