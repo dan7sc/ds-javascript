@@ -30,6 +30,22 @@ graph.addEdge('B', 'E')
 graph.addEdge('B', 'F')
 graph.addEdge('E', 'I')
 
+
+const graphv2 = new Graph(true)
+
+graphv2.addEdge('A', 'C')
+graphv2.addEdge('A', 'D')
+graphv2.addEdge('B', 'D')
+graphv2.addEdge('B', 'E')
+graphv2.addEdge('C', 'F')
+graphv2.addEdge('F', 'E')
+
+const localVerticesv2 = ['A', 'B', 'C', 'D', 'E', 'F']
+
+for(let i = 0; i < localVerticesv2.length; i++) {
+  graphv2.addVertex(localVerticesv2[i])
+}
+
 // console.log(graph.vertices)
 // console.log(graph.adjacentList.table)
 
@@ -42,4 +58,9 @@ graph.addEdge('E', 'I')
 
 // graph.showPathsfromVertex(localVertices, 0)
 
-graph.depthFirstSearch(printVertex)
+// graph.depthFirstSearch(printVertex)
+
+const result = graph.depthFirstSearch()
+console.log(result)
+
+graphv2.topsort(localVerticesv2)

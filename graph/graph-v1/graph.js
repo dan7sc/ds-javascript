@@ -130,18 +130,43 @@ class Graph {
     const adjacentList = this.getAdjacentList()
     const color = initializeColor(vertices)
 
+    const discoveryTime = {}
+    const finishTime = {}
+    const predecessors = {}
+    const time = {
+      count: 0
+    }
+
+    for(let i = 0; i < vertices.length; i++) {
+      discoveryTime[vertices[i]] = 0
+      finishTime[vertices[i]] = 0
+      predecessors[vertices[i]] = null
+    }
+
     for(let i = 0; i < vertices.length; i++) {
       const currentVertice = vertices[i]
       if(color[currentVertice] === Colors.WHITE) {
         this.depthFirstSearchHelper(
-          currentVertice, color, adjacentList, callback
+          currentVertice, color, discoveryTime, finishTime,
+          predecessors, time, adjacentList, callback
         )
       }
     }
+
+    return {
+      discovery: discoveryTime,
+      finished: finishTime,
+      predecessors
+    }
   }
 
-  depthFirstSearchHelper(vertice, color, adjacentList, callback) {
+  depthFirstSearchHelper(
+    vertice, color, discovery, finished,
+    predecessors, time, adjacentList, callback
+  ) {
     color[vertice] = Colors.GREY
+    discovery[vertice] = ++time.count
+
     if(callback) {
       callback(vertice)
     }
@@ -149,10 +174,33 @@ class Graph {
     for(let i = 0; i < neighbors.length; i++) {
       const neighbor = neighbors[i]
       if(color[neighbor] === Colors.WHITE) {
-        this.depthFirstSearchHelper(neighbor, color, adjacentList, callback)
+        predecessors[neighbor] = vertice
+        this.depthFirstSearchHelper(
+          neighbor, color, discovery, finished, predecessors,
+          time, adjacentList, callback
+        )
       }
     }
     color[vertice] = Colors.BLACK
+    finished[vertice] = ++time.count
+  }
+
+  topsort(vertices) {
+    const { finished } = this.depthFirstSearch()
+    let str = ''
+    for(let i = 0; i < vertices.length; i++) {
+      let max = 0
+      let maxName = null
+      for(let j = 0; j < vertices.length; j++) {
+        if(finished[vertices[j]] > max) {
+          max = finished[vertices[j]]
+          maxName = vertices[j]
+        }
+      }
+      i !== vertices.length - 1 ? str += `${maxName} - ` : str += `${maxName}`
+      delete finished[maxName]
+    }
+    console.log(str)
   }
 }
 
