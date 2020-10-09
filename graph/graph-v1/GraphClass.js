@@ -36,6 +36,34 @@ class GraphClass {
     }
     return distance
   }
+
+  static floydWarshall(graph) {
+    const distance = []
+    const { length } = graph
+    for(let i = 0; i < length; i++) {
+      distance[i] = []
+      for(let j = 0; j < length; j++) {
+        if(i === j) {
+          distance[i][j] = 0
+        } else if(!graph[i][j]) {
+          distance[i][j] = Infinity
+        } else {
+          distance[i][j] = graph[i][j]
+        }
+      }
+    }
+
+    for(let k = 0; k < length; k++) {
+      for(let i = 0; i < length; i++) {
+        for(let j = 0; j < length; j++) {
+          if(distance[i][k] + distance[k][j] < distance[i][j]) {
+            distance[i][j] = distance[i][k] + distance[k][j]
+          }
+        }
+      }
+    }
+    return distance
+  }
 }
 
 module.exports = GraphClass

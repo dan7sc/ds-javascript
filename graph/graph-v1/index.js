@@ -66,6 +66,12 @@ for(let i = 0; i < localVerticesv2.length; i++) {
 
 // graphv2.topsort(localVerticesv2)
 
+//     (2) -> B - (4) ->> D -> (2)
+//   /  |  \              |       \
+// A   (2)  -- (2) --    (3)     >> F
+//   \  |             \   |       /
+//     (4) -> C - (3) ->> E -> (2)
+
 const graphv3 = [
   [0, 2, 4, 0, 0, 0],
   [0, 0, 2, 4, 2, 0],
@@ -75,5 +81,8 @@ const graphv3 = [
   [0, 0, 0, 0, 0, 0]
 ]
 
-const dist = GraphClass.dijkstra(graphv3, 0)
+let dist = GraphClass.dijkstra(graphv3, 0)
+console.log(dist)
+
+dist = GraphClass.floydWarshall(graphv3)
 console.log(dist)
