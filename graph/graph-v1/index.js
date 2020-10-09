@@ -86,3 +86,20 @@ console.log(dist)
 
 dist = GraphClass.floydWarshall(graphv3)
 console.log(dist)
+
+const graphv4 = [
+  [0, 2, 4, 0, 0, 0],
+  [0, 0, 2, 4, 2, 0],
+  [4, 2, 0, 0, 3, 0],
+  [0, 4, 0, 0, 3, 2],
+  [0, 2, 3, 3, 0, 2],
+  [0, 0, 0, 2, 2, 0]
+]
+
+dist = GraphClass.prim(graphv4)
+console.log(dist)
+console.log('Edge    Weight')
+for(let i = 1; i < graphv4.length; i++) {
+  const j = dist[i]
+  console.log(`${j} - ${i}     ${graphv4[j][i]}`)
+}

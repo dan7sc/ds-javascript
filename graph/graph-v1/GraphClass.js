@@ -10,6 +10,18 @@ const minDistance = (distance, visited) => {
   return minIndex
 }
 
+const minKey = (graph, key, visited) => {
+  let min = Infinity
+  let minIndex = 0
+  for(let i = 0; i < graph.length; i++) {
+    if(visited[i] === false && key[i] < min) {
+      min = key[i]
+      minIndex = i
+    }
+  }
+  return minIndex
+}
+
 class GraphClass {
   static dijkstra(graph, src) {
     const distance = []
@@ -63,6 +75,35 @@ class GraphClass {
       }
     }
     return distance
+  }
+
+  static prim(graph) {
+    const parent = []
+    const key = []
+    const visited = []
+    const { length } = graph
+
+    for(let i = 0; i< length; i++) {
+      key[i] = Infinity
+      visited[i] = false
+    }
+    key[0] = 0
+    parent[0] = -1
+
+    for(let i = 0; i < length; i++) {
+      const vertex = minKey(graph, key, visited)
+      visited[vertex] = true
+      for(let neighbor = 0; neighbor < length; neighbor++) {
+        if(graph[vertex][neighbor] &&
+           !visited[neighbor] &&
+           graph[vertex][neighbor] < key[neighbor] ) {
+          parent[neighbor] = vertex
+          key[neighbor] = graph[vertex][neighbor]
+        }
+      }
+    }
+
+    return parent
   }
 }
 
