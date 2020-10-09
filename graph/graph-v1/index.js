@@ -1,4 +1,5 @@
 const Graph = require('./graph')
+const GraphClass = require('./GraphClass')
 
 const printVertex = (value) => console.log('Visited vertex:', value)
 
@@ -60,7 +61,19 @@ for(let i = 0; i < localVerticesv2.length; i++) {
 
 // graph.depthFirstSearch(printVertex)
 
-const result = graph.depthFirstSearch()
-console.log(result)
+// const result = graph.depthFirstSearch()
+// console.log(result)
 
-graphv2.topsort(localVerticesv2)
+// graphv2.topsort(localVerticesv2)
+
+const graphv3 = [
+  [0, 2, 4, 0, 0, 0],
+  [0, 0, 2, 4, 2, 0],
+  [0, 0, 0, 0, 3, 0],
+  [0, 0, 0, 0, 0, 2],
+  [0, 0, 0, 3, 0, 2],
+  [0, 0, 0, 0, 0, 0]
+]
+
+const dist = GraphClass.dijkstra(graphv3, 0)
+console.log(dist)
