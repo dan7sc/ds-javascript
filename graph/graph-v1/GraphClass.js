@@ -22,6 +22,37 @@ const minKey = (graph, key, visited) => {
   return minIndex
 }
 
+const find = (index, parent) => {
+  while(parent[index]) {
+    index = parent[index]
+  }
+  return index
+}
+
+const union = (i, j, parent) => {
+  if(i !== j) {
+    parent[j] = i
+    return true
+  }
+  return false
+}
+
+const initializeCost = (graph) => {
+  const cost = []
+  const { length } = graph
+  for(let i = 0; i < length; i++) {
+    cost[i] = []
+    for(let j = 0; j < length; j++) {
+      if(graph[i][j] === 0) {
+        cost[i][j] = Infinity
+      } else {
+        cost[i][j] = graph[i][j]
+      }
+    }
+  }
+  return cost
+}
+
 class GraphClass {
   static dijkstra(graph, src) {
     const distance = []
@@ -102,7 +133,39 @@ class GraphClass {
         }
       }
     }
+    return parent
+  }
 
+  static kruskal(graph) {
+    const { length } = graph
+    const parent = []
+    let numEdges = 0
+    let min
+    let auxVertex, auxNeighbor
+    let vertex, neighbor
+
+    const cost = initializeCost(graph)
+    while(numEdges < length - 1) {
+      min = Infinity
+      for(let i = 0; i < length; i++) {
+        for(let j = 0; j < length; j++) {
+          if(cost[i][j] < min) {
+            min = cost[i][j]
+            auxVertex = i
+            vertex = i
+            auxNeighbor = j
+            neighbor = j
+          }
+        }
+      }
+      vertex = find(vertex, parent)
+      neighbor = find(neighbor, parent)
+      if(union(vertex, neighbor, parent)) {
+        numEdges++
+      }
+      cost[auxVertex][auxNeighbor] = Infinity
+      cost[auxNeighbor][auxVertex] = Infinity
+    }
     return parent
   }
 }

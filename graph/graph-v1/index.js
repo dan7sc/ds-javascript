@@ -96,10 +96,44 @@ const graphv4 = [
   [0, 0, 0, 2, 2, 0]
 ]
 
+//     (2) -  B - (4) -   D -  (2)
+//   /        | \         |       \
+// A         (2)  (2) -  (3)       F
+//   \        |         \ |       /
+//     (4) -  C - (3) -   E -  (2)
+
+const graphv5 = [
+  [0, 2, 0, 6, 0],
+  [2, 0, 3, 8, 5],
+  [0, 3, 0, 0, 7],
+  [6, 8, 0, 0, 9],
+  [0, 5, 7, 9, 0]
+]
+
+//     (2) -- B - (3) --  C
+//   /  |     | \         |
+// A   (2)   (8) (5) -   (7)
+//   \  |      |       \  |
+//     (6) -- D - (9) --  E
+
 dist = GraphClass.prim(graphv4)
 console.log(dist)
 console.log('Edge    Weight')
+let minCost = 0
 for(let i = 1; i < graphv4.length; i++) {
   const j = dist[i]
+  minCost += graphv4[j][i]
   console.log(`${j} - ${i}     ${graphv4[j][i]}`)
 }
+console.log('Minimum cost:', minCost)
+
+dist = GraphClass.kruskal(graphv4)
+console.log(dist)
+console.log('Edge    Weight')
+minCost = 0
+for(let i = 1; i < graphv4.length; i++) {
+  const j = dist[i]
+  minCost += graphv4[j][i]
+  console.log(`${j} - ${i}     ${graphv4[j][i]}`)
+}
+console.log('Minimum cost:', minCost)
