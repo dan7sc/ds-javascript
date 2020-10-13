@@ -22,14 +22,39 @@ const minKey = (graph, key, visited) => {
   return minIndex
 }
 
+const isParentValid = (index, parent) => {
+  let count = 0
+
+  for(let i = 0; i < parent.length; i++) {
+      if(parent[i] === index) {
+        count++
+      }
+  }
+
+  if(count > 1) {
+    return false
+  }
+
+  return true
+}
+
 const find = (index, parent) => {
-  while(parent[index]) {
+  while(parent[index] > 0 &&
+        isParentValid(parent[index], parent)) {
     index = parent[index]
   }
   return index
 }
 
 const union = (i, j, parent) => {
+  let aux
+  if((parent[i] !== 0 && parent[i] == null) &&
+     (parent[j] !== 0 && parent[j] == null)) {
+    aux = i
+    i = j
+    j = aux
+  }
+
   if(i !== j) {
     parent[j] = i
     return true
@@ -145,11 +170,13 @@ class GraphClass {
     let vertex, neighbor
 
     const cost = initializeCost(graph)
+    parent[0] = -1
+
     while(numEdges < length - 1) {
       min = Infinity
       for(let i = 0; i < length; i++) {
         for(let j = 0; j < length; j++) {
-          if(cost[i][j] < min) {
+          if(find(i, parent) !== find(j, parent) && cost[i][j] < min) {
             min = cost[i][j]
             auxVertex = i
             vertex = i
