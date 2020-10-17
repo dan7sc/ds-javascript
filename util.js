@@ -29,10 +29,19 @@ const swap = (array, a, b) => {
   [array[a], array[b]] = [array[b], array[a]]
 }
 
+const createNonSortedArray = (size) => {
+  const array = []
+  for(let i = size; i > 0; i--) {
+    array.push(i)
+  }
+  return array
+}
+
 module.exports = {
   defaultEquals,
   Compare,
   defaultCompare,
   defaultToString,
-  swap
+  swap,
+  createNonSortedArray
 }
