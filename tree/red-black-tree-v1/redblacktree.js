@@ -148,7 +148,7 @@ class RedBlackTree extends BinarySearchTree {
   }
 
   getSibling(node) {
-    if(node.parent) {
+    if(!node.parent) {
       return null
     }
     if(node.parent.left === node) {
